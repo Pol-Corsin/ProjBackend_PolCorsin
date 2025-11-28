@@ -23,9 +23,14 @@
         <div class="tarja-article">
             <h3><?= htmlspecialchars($article['title']); ?></h3>
             <p><?= nl2br(htmlspecialchars($article['content'])); ?></p> <!-- nl2br per mantenir salts de línia -->
-            <?php if (isset($_SESSION['user_id']) && $article['user_id'] == $_SESSION['user_id']): ?> <!--si l'usuari és el propietari de l'article -->
-                <a href="article_edit.view.php?id=<?= $article['id']; ?>">Edit</a>
-                <a href="article_delete.php?id=<?= $article['id']; ?>" onclick="return confirm('Estàs segur que vols eliminar aquest article?');">Delete</a>
+            <?php
+            if (
+                isset($_SESSION['user_id']) &&
+                ($article['user_id'] == $_SESSION['user_id'] || $_SESSION['role'] === 'admin') 
+            ): ?>
+                <a href="article_edit.view.php?id=<?= $article['id']; ?>">Editar</a>
+                <a href="article_delete.php?id=<?= $article['id']; ?>"
+                    onclick="return confirm('Estàs segur que vols eliminar aquest article?');">Eliminar</a>
             <?php endif; ?>
         </div>
         <hr>
