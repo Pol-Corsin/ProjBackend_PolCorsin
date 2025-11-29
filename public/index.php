@@ -1,7 +1,5 @@
 <?php
 // Utilitzem SESSIONS per a l'autenticació. Les cookies s'utilitzen per guardar la cookie de sessió al navegador,
-// però no guardem informació sensible directament a la cookie. Si necessitessim "Remember me" optarem per cookies segures
-// i tokens signats, però per aquesta pràctica és suficient mantenir la sessió actiu.
 
 // session.gc_maxlifetime controla el temps en què PHP manté la informació de sessió al servidor.
 ini_set('session.gc_maxlifetime', 2400); // durada del servidor per a dades de sessió
