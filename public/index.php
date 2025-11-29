@@ -89,15 +89,7 @@ if (isset($_GET['action'])) {
 }
 
 // Paginació 
-$perPageOptions = [1,2,4,6];
-$perPage = isset($_GET['perPage']) ? max(1,intval($_GET['perPage'])) : 4; // default 4
-if (!in_array($perPage, $perPageOptions)) $perPage = 4;
-$page = isset($_GET['page']) ? max(1,intval($_GET['page'])) : 1;
-$offset = ($page - 1) * $perPage;
 
-// Articles paginats 
-$totalArticles = ArticleController::countAll();
-$articles = ArticleController::getPaginated($perPage, $offset);
 
 // ROUTER
 if (!isset($view)) {
