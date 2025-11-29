@@ -42,7 +42,49 @@
     </div>
 
     <!-- Pagination -->
-    
+    <div class="container">
+        <?php
+        $totalPages = max(1, (int)ceil($totalArticles / $perPage));
+        $currentPage = max(1, $page);
+
+        $baseUrl = 'index.php'; // Base URL for pagination links
+        $viewParam = isset($_GET['view']) ? 'view=' . urlencode($_GET['view']) . '&' : '';  // Preserve view parameter
+
+        ?>
+        <div class="pagination">
+            <?php if ($currentPage > 1): ?>
+                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=1&perPage=<?= $perPage ?>">Principi</a>
+                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $currentPage - 1 ?>&perPage=<?= $perPage ?>">Anterior</a>
+            <?php endif; ?>
+
+            <?php for ($p = 1; $p <= $totalPages; $p++): ?>
+                <?php if ($p == $currentPage): ?>
+                    <span class="page current"><?= $p ?></span>
+                <?php else: ?>
+                    <a class="page" href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $p ?>&perPage=<?= $perPage ?>"><?= $p ?></a>
+                <?php endif; ?>
+            <?php endfor; ?>
+
+            <?php if ($currentPage < $totalPages): ?>
+                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $currentPage + 1 ?>&perPage=<?= $perPage ?>">Seguent</a>
+                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $totalPages ?>&perPage=<?= $perPage ?>">Final</a>
+            <?php endif; ?>
+
+            <!-- perPage dropdown -->
+            <div class="perpage">
+                <form method="get" action="<?= $baseUrl ?>">
+                    <?php if (isset($_GET['view'])): ?><input type="hidden" name="view" value="<?= htmlspecialchars($_GET['view']) ?>"><?php endif; ?>
+                    <label>Mostra per pàgina:</label>
+                    <select name="perPage" onchange="this.form.submit()">
+                        <?php foreach ([1,2,4,6] as $pp): ?>
+                            <option value="<?= $pp ?>" <?php if ($pp == $perPage) echo 'selected'; ?>><?= $pp ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="hidden" name="page" value="1">
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
