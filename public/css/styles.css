@@ -161,10 +161,17 @@ form .auth-form {
     max-width: 500px;
 }
 
+/* Form group styling for better accessibility and visual structure */
+.form-group {
+    margin-bottom: 15px;
+}
+
 label {
     display: block;
     margin: 8px 0 4px;
-    font-size: 0.95rem
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
 }
 
 input[type=text],
@@ -176,6 +183,53 @@ textarea {
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 6px;
     box-sizing: border-box;
+}
+
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus,
+textarea:focus {
+    outline: 2px solid #17BFFF;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(23, 189, 255, 0.1);
+}
+
+/* Fieldset styling for password section */
+fieldset {
+    border: 1px solid rgba(163, 36, 174, 0.3);
+    border-radius: 6px;
+    padding: 12px;
+    margin: 15px 0;
+}
+
+legend {
+    padding: 0 8px;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 0.95rem;
+}
+
+/* Error message styling */
+[role="alert"] {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    background: rgba(176, 0, 32, 0.1);
+    border-left: 4px solid #b00020;
+}
+
+[role="alert"] ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style-position: inside;
+}
+
+/* Password requirements text styling */
+#password_requirements {
+    margin-top: 8px;
+    color: #666;
+    font-size: 0.9em;
+    display: block;
 }
 
 button {
@@ -192,6 +246,38 @@ button {
 button:hover {
     opacity: 0.95;
     transform: translateY(-1px);
+}
+
+button:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+/* Article actions styling */
+.article-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.article-actions a {
+    padding: 6px 12px;
+    background: rgba(163, 36, 174, 0.2);
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.article-actions a:hover {
+    background: rgba(163, 36, 174, 0.4);
+}
+
+/* Pagination section and list styling */
+.pagination-section {
+    margin-top: 20px;
+}
+
+.articles-list {
+    margin-bottom: 20px;
 }
 
 .header-links {

@@ -9,47 +9,55 @@
 <body>
     <link rel="stylesheet" href="css/styles.css">
     <?php include __DIR__ . '/partials/nav.view.php'; ?>
-    <div class="container">
-    <?php if (isset($errors) && count($errors) > 0): ?>
-        <ul style="color:red;">
-            <?php foreach ($errors as $err): ?>
-                <li><?= htmlspecialchars($err) ?></li>
+    <main class="container">
+        <?php if (isset($errors) && count($errors) > 0): ?>
+            <div role="alert" aria-live="polite">
+                <ul style="color:red;">
+                    <?php foreach ($errors as $err): ?>
+                        <li><?= htmlspecialchars($err) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php elseif (isset($error)): ?>
+            <p style="color:red;" role="alert" aria-live="polite"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
+
+        <section class="title">
+            <h1>Home</h1>
+        </section>
+
+        <!-- Search bar with accessible label -->
+        <section class="searchbar" style="margin-bottom: 10px">
+            <label for="iSearch">Cercar articles:</label>
+            <input type="text" id="iSearch" placeholder="Escriu aquí per cercar..."> <!-- Barra de cerca -->
+        </section>
+
+        <!-- Articles section -->
+        <section class="articles-list">
+            <?php foreach ($articles as $article): ?>
+                <article class="tarja-article">
+                    <h3><?= htmlspecialchars($article['title']); ?></h3>
+                    <p><?= nl2br(htmlspecialchars($article['content'])); ?></p>
+                    <?php
+                    if (
+                        isset($_SESSION['user_id']) &&
+                        ($article['user_id'] == $_SESSION['user_id'] || ($_SESSION['role'] ?? null) === 'admin') 
+                    ): ?>
+                        <div class="article-actions">
+                            <a href="index.php?view=article_edit&id=<?= $article['id']; ?>" aria-label="Editar article: <?= htmlspecialchars($article['title']) ?>">Editar</a>
+                            <a href="index.php?action=delete&id=<?= $article['id']; ?>"
+                                onclick="return confirm('Estàs segur que vols eliminar aquest article?');"
+                                aria-label="Eliminar article: <?= htmlspecialchars($article['title']) ?>">Eliminar</a>
+                        </div>
+                    <?php endif; ?>
+                </article>
+                <hr>
             <?php endforeach; ?>
-        </ul>
-    <?php elseif (isset($error)): ?>
-        <p style="color:red;"><?= htmlspecialchars($error) ?></p>
-    <?php endif; ?>
-
-    <div class="title">
-        <h1>Home</h1>
-    </div>
-
-    <!-- ! Los label "no arriben an cap lloc" !Per implementar --> <!-- ! TODO -->
-    <div class="searchbar" style="margin-bottom: 10px">
-        <input type="text" id="iSearch" placeholder="Search here..."> <!-- Barra de cerca -->
-    </div>
-
-    
-    <?php foreach ($articles as $article): ?>
-        <div class="tarja-article">
-            <h3><?= htmlspecialchars($article['title']); ?></h3>
-            <p><?= nl2br(htmlspecialchars($article['content'])); ?></p> <!-- nl2br per mantenir salts de linia -->
-            <?php
-            if (
-                isset($_SESSION['user_id']) &&
-                ($article['user_id'] == $_SESSION['user_id'] || ($_SESSION['role'] ?? null) === 'admin') 
-            ): ?>
-                <a href="index.php?view=article_edit&id=<?= $article['id']; ?>">Editar</a>
-                <a href="index.php?action=delete&id=<?= $article['id']; ?>"
-                    onclick="return confirm('Estàs segur que vols eliminar aquest article?');">Eliminar</a>
-            <?php endif; ?>
-        </div>
-        <hr>
-    <?php endforeach; ?>
-    </div>
+        </section>
+    </main>
 
     <!-- Pagination -->
-    <div class="container">
+    <section class="container pagination-section">
         <?php
         $totalPages = max(1, (int)ceil($totalArticles / $perPage));
         $currentPage = max(1, $page);
@@ -58,31 +66,31 @@
         $viewParam = isset($_GET['view']) ? 'view=' . urlencode($_GET['view']) . '&' : '';  // Preserve view parameter
 
         ?>
-        <div class="pagination">
+        <nav class="pagination" aria-label="Paginació d'articles">
             <?php if ($currentPage > 1): ?>
-                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=1&perPage=<?= $perPage ?>">Principi</a>
-                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $currentPage - 1 ?>&perPage=<?= $perPage ?>">Anterior</a>
+                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=1&perPage=<?= $perPage ?>" aria-label="Primera pàgina">Principi</a>
+                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $currentPage - 1 ?>&perPage=<?= $perPage ?>" aria-label="Pàgina anterior">Anterior</a>
             <?php endif; ?>
 
             <?php for ($p = 1; $p <= $totalPages; $p++): ?>
                 <?php if ($p == $currentPage): ?>
-                    <span class="page current"><?= $p ?></span>
+                    <span class="page current" aria-current="page" aria-label="Pàgina <?= $p ?> (actual)"><?= $p ?></span>
                 <?php else: ?>
-                    <a class="page" href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $p ?>&perPage=<?= $perPage ?>"><?= $p ?></a>
+                    <a class="page" href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $p ?>&perPage=<?= $perPage ?>" aria-label="Pàgina <?= $p ?>"><?= $p ?></a>
                 <?php endif; ?>
             <?php endfor; ?>
 
             <?php if ($currentPage < $totalPages): ?>
-                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $currentPage + 1 ?>&perPage=<?= $perPage ?>">Seguent</a>
-                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $totalPages ?>&perPage=<?= $perPage ?>">Final</a>
+                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $currentPage + 1 ?>&perPage=<?= $perPage ?>" aria-label="Pàgina següent">Seguent</a>
+                <a href="<?= $baseUrl ?>?<?= $viewParam ?>page=<?= $totalPages ?>&perPage=<?= $perPage ?>" aria-label="Última pàgina">Final</a>
             <?php endif; ?>
 
             <!-- perPage dropdown -->
             <div class="perpage">
                 <form method="get" action="<?= $baseUrl ?>">
                     <?php if (isset($_GET['view'])): ?><input type="hidden" name="view" value="<?= htmlspecialchars($_GET['view']) ?>"><?php endif; ?>
-                    <label>Mostra per pàgina:</label>
-                    <select name="perPage" onchange="this.form.submit()">
+                    <label for="perPageSelect">Mostra per pàgina:</label>
+                    <select id="perPageSelect" name="perPage" onchange="this.form.submit()" aria-label="Selecciona quants articles mostrar per pàgina">
                         <?php foreach ([1,2,4,6] as $pp): ?>
                             <option value="<?= $pp ?>" <?php if ($pp == $perPage) echo 'selected'; ?>><?= $pp ?></option>
                         <?php endforeach; ?>
@@ -90,8 +98,8 @@
                     <input type="hidden" name="page" value="1">
                 </form>
             </div>
-        </div>
-    </div>
+        </nav>
+    </section>
 </body>
 
 </html>
