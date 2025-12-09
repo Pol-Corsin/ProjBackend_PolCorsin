@@ -22,7 +22,7 @@
     <?php endif; ?>
 
     <!-- Formulari Register -->
-    <form action="index.php" method="post">
+    <form class="auth-form" action="index.php" method="post">
         <input type="hidden" name="action" value="register">
         <label>Usuari:</label>
         <input type="text" name="username" value="<?= $username ?? '' ?>" required>
