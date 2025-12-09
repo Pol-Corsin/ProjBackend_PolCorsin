@@ -1,7 +1,11 @@
+/*IMPORTS*/
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+
 :root {
     --bg-start: #fbe0ff;
     --bg-end: #b21f1f;
-    --accent: #1aabff;
+    --accent: #a324ae;
+    --curpag: #e242f16e;
     --card-bg: rgba(255, 255, 255, 0.9);
 }
 
@@ -9,8 +13,9 @@ html,
 body {
     height: 100%;
     margin: 0;
-    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Baloo 2', cursive;
 }
+
 
 body {
     background: linear-gradient(137deg, rgba(234, 167, 235, 1) 0%, rgba(230, 208, 172, 1) 100%);
@@ -68,7 +73,7 @@ body {
 }
 
 .pagination span.current {
-    background: var(--accent);
+    background: var(--curpag); 
     padding: 6px 10px;
     border-radius: 6px;
     color: #111;
@@ -118,6 +123,7 @@ body {
 
 
 h1 {
+    font-size: 6cap;
     color: white;
     font-weight: 700;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.564);
@@ -173,7 +179,7 @@ textarea {
 }
 
 button {
-    background: linear-gradient(112deg, rgba(43, 77, 117, 1) 0%, rgba(62, 44, 71, 1) 100%);
+    background: linear-gradient(118deg,rgba(23, 189, 255, 1) 33%, rgba(0, 128, 201, 1) 100%);
     margin-top: 10px;
     border: none;
     color: #ffffff;

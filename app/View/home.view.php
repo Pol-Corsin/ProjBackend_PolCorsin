@@ -23,6 +23,13 @@
     <div class="title">
         <h1>Home</h1>
     </div>
+
+    <!-- ! Los label "no arriben an cap lloc" !Per implementar --> <!-- ! TODO -->
+    <div class="searchbar" style="margin-bottom: 10px">
+        <input type="text" id="iSearch" placeholder="Search here..."> <!-- Barra de cerca -->
+    </div>
+
+    
     <?php foreach ($articles as $article): ?>
         <div class="tarja-article">
             <h3><?= htmlspecialchars($article['title']); ?></h3>

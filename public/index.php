@@ -127,6 +127,10 @@ switch ($view) {
         }
         include __DIR__ . '/../app/View/home.view.php';
         break;
+    case 'user_management':
+        // mostra nomes en cas de tenir el rol d'administrador
+        include __DIR__ . '/../app/View/user_management.view.php';
+        break;
     default:
         include __DIR__ . '/../app/View/home.view.php';
         break;

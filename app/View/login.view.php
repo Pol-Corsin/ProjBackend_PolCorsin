@@ -22,7 +22,7 @@
         <p class='error' style='color:red;'><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
 
-    <form action="index.php" method="post">
+    <form class="auth-form" action="index.php" method="post"> 
         <input type="hidden" name="action" value="login">
         <label>Usuari:</label>
         <input type="text" name="username" value="<?= $username ?? '' ?>" required>
@@ -30,7 +30,7 @@
         <input type="password" name="password" required>
         <button type="submit">Entrar</button>
     </form>
-    <p><a href="index.php?view=register">Registrar-se</a> | <a href="index.php?view=recover">Has oblidat la contrasenya?</a></p> <!-- Falta implementar recover view -->
+    <p style="color: #a324ae"><a href="index.php?view=register">Registrar-se</a> | <a href="index.php?view=recover">Has oblidat la contrasenya?</a></p> <!-- Falta implementar recover view -->
     </div>
 </body>
 
