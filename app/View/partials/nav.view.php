@@ -13,6 +13,10 @@
   </div>
 
   <div class="nav-right">
+    <?php if (($_SESSION['role'] ?? null === 'admin')):  ?>
+    <a href="index.php=view=user_management">Gestionar Usuaris</a> <!--TODO --> 
+    <?php endif; ?>
+
     <?php if (isset($_SESSION['user_id'])): ?>
       <a href="index.php?view=my_articles">Gestionar els meus articles</a>
       <a href="index.php?view=article_edit">Crear nou article</a>
