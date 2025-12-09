@@ -5,6 +5,13 @@
   <div class="nav-left">
     <a href="index.php">Inici</a>
   </div>
+
+  <!-- ! Los label "no arriben an cap lloc" !Per implementar --> <!-- ! TODO -->
+  <div class="nav-center">
+    <label for="buscar">Search: </label>
+    <input type="text" id="iSearch"> <!-- Barra de cerca -->
+  </div>
+
   <div class="nav-right">
     <?php if (isset($_SESSION['user_id'])): ?>
       <a href="index.php?view=my_articles">Gestionar els meus articles</a>
