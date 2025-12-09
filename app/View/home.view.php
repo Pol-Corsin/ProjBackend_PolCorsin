@@ -20,9 +20,9 @@
         <p style="color:red;"><?= htmlspecialchars($error) ?></p>
     <?php endif; ?>
 
-
-
-    <h2 style="color: white">Articles públics</h2>
+    <div class="title">
+        <h1>Home</h1>
+    </div>
     <?php foreach ($articles as $article): ?>
         <div class="tarja-article">
             <h3><?= htmlspecialchars($article['title']); ?></h3>
