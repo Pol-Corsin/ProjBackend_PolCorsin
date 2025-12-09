@@ -34,4 +34,11 @@ class User
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public static function update($username, $newusername) {
+        $db = DB::connect();
+        $stmt = $db->prepare("UPDATE users SET username=? WHERE username=?");
+        $stmt->execute([$newusername, $username]);
+        return true;
+    }
 }
