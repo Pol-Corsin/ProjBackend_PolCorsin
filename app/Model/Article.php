@@ -20,10 +20,17 @@ class Article
     }
 
     // Retorna articles paginats
-    public static function getPaginated($limit, $offset)
+    public static function getPaginated($limit, $offset, $sortBy = 'creation_date', $sortOrder = 'DESC')
     {
         $db = DB::connect();
-        $stmt = $db->prepare("SELECT * FROM articles ORDER BY creation_date DESC LIMIT ? OFFSET ?");
+        // Validar paràmetres de ordenació per evitar SQL injection
+        $allowedSortBy = ['creation_date', 'title'];
+        $allowedSortOrder = ['ASC', 'DESC'];
+        
+        $sortBy = in_array($sortBy, $allowedSortBy) ? $sortBy : 'creation_date';
+        $sortOrder = in_array(strtoupper($sortOrder), $allowedSortOrder) ? strtoupper($sortOrder) : 'DESC';
+        
+        $stmt = $db->prepare("SELECT * FROM articles ORDER BY $sortBy $sortOrder LIMIT ? OFFSET ?");
         $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
         $stmt->bindValue(2, (int)$offset, PDO::PARAM_INT);
         $stmt->execute();
@@ -49,10 +56,17 @@ class Article
     }
 
     // Paginated for user
-    public static function getPaginatedByUser($limit, $offset, $user_id)
+    public static function getPaginatedByUser($limit, $offset, $user_id, $sortBy = 'creation_date', $sortOrder = 'DESC')
     {
         $db = DB::connect();
-        $stmt = $db->prepare("SELECT * FROM articles WHERE user_id = ? ORDER BY creation_date DESC LIMIT ? OFFSET ?");
+        // Validar paràmetres de ordenació per evitar SQL injection
+        $allowedSortBy = ['creation_date', 'title'];
+        $allowedSortOrder = ['ASC', 'DESC'];
+        
+        $sortBy = in_array($sortBy, $allowedSortBy) ? $sortBy : 'creation_date';
+        $sortOrder = in_array(strtoupper($sortOrder), $allowedSortOrder) ? strtoupper($sortOrder) : 'DESC';
+        
+        $stmt = $db->prepare("SELECT * FROM articles WHERE user_id = ? ORDER BY $sortBy $sortOrder LIMIT ? OFFSET ?");
         $stmt->bindValue(1, $user_id, PDO::PARAM_INT);
         $stmt->bindValue(2, (int)$limit, PDO::PARAM_INT);
         $stmt->bindValue(3, (int)$offset, PDO::PARAM_INT);

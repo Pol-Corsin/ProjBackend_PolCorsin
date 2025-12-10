@@ -15,9 +15,9 @@ class ArticleController
     {
         return Article::countByUser($user_id);
     }
-    public static function getPaginatedByUser($limit, $offset, $user_id)
+    public static function getPaginatedByUser($limit, $offset, $user_id, $sortBy = 'creation_date', $sortOrder = 'DESC')
     {
-        return Article::getPaginatedByUser($limit, $offset, $user_id);
+        return Article::getPaginatedByUser($limit, $offset, $user_id, $sortBy, $sortOrder);
     }
     // Wrapper per obtenir el total d'articles
     public static function countAll()
@@ -25,9 +25,9 @@ class ArticleController
         return Article::countAll();
     }
     // Wrapper per articles paginats
-    public static function getPaginated($limit, $offset)
+    public static function getPaginated($limit, $offset, $sortBy = 'creation_date', $sortOrder = 'DESC')
     {
-        return Article::getPaginated($limit, $offset);
+        return Article::getPaginated($limit, $offset, $sortBy, $sortOrder);
     }
 
     /**
@@ -106,6 +106,7 @@ class ArticleController
         $ok = Article::delete($id);
         return ['success' => (bool) $ok, 'errors' => $ok ? [] : ['No s\'ha pogut eliminar l\'article']];
     }
-}
 
+
+} // class ArticleController
 ?>

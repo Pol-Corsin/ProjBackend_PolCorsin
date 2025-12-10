@@ -95,9 +95,15 @@ if (!in_array($perPage, $perPageOptions)) $perPage = 4;
 $page = isset($_GET['page']) ? max(1,intval($_GET['page'])) : 1;
 $offset = ($page - 1) * $perPage;
 
+// Paràmetres d'ordenació
+$allowedSortBy = ['creation_date', 'title'];
+$allowedSortOrder = ['ASC', 'DESC'];
+$sortBy = isset($_GET['sortBy']) && in_array($_GET['sortBy'], $allowedSortBy) ? $_GET['sortBy'] : 'creation_date';
+$sortOrder = isset($_GET['sortOrder']) && in_array($_GET['sortOrder'], $allowedSortOrder) ? $_GET['sortOrder'] : 'DESC';
+
 // Articles paginats 
 $totalArticles = ArticleController::countAll();
-$articles = ArticleController::getPaginated($perPage, $offset);
+$articles = ArticleController::getPaginated($perPage, $offset, $sortBy, $sortOrder);
 
 // ROUTER
 if (!isset($view)) {
@@ -123,7 +129,7 @@ switch ($view) {
         if (isset($_SESSION['user_id'])) {
             // Paginar per usuari actual
             $totalArticles = ArticleController::countByUser($_SESSION['user_id']);
-            $articles = ArticleController::getPaginatedByUser($perPage, $offset, $_SESSION['user_id']);
+            $articles = ArticleController::getPaginatedByUser($perPage, $offset, $_SESSION['user_id'], $sortBy, $sortOrder);
         }
         include __DIR__ . '/../app/View/home.view.php';
         break;
@@ -131,6 +137,11 @@ switch ($view) {
         // mostra nomes en cas de tenir el rol d'administrador
         include __DIR__ . '/../app/View/user_management.view.php';
         break;
+    case 'recover';
+        include __DIR__ . '/../app/View/recover.view.php';
+        break;
+
+
     default:
         include __DIR__ . '/../app/View/home.view.php';
         break;
