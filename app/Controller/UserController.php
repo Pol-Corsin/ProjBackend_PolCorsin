@@ -90,4 +90,56 @@ class UserController
     }
 }
 
+    public static function generateTokenRecuperacio($user_id) {
+        $token = bin2hex(random_bytes(16)); // Genera un token aleatori
+        $expiration_date = date('Y-m-d H:i:s', strtotime('+1 hour')); // Expira en 1 hora
+
+        // Emmagatzema el token a la base de dades
+        $db = Database::getConnection();
+        $stmt = $db->prepare("INSERT INTO tokens_recuperacio (user_id, token, expiration_date) VALUES (?, ?, ?)");
+        $stmt->execute([$user_id, $token, $expiration_date]);
+
+        return $token;
+    }
+
+    //send token to user email phpMailer
+    public static function sendTokenEmail($email, $token) {
+        $resetLink = "http://yourdomain.com/reset_password.php?token=" . $token;
+
+        $subject = "Recuperació de contrasenya";
+        $message = "Feu clic al següent enllaç per restablir la vostra contrasenya: " . $resetLink;
+        $headers = "From: no-reply@yourdomain.com\r\n";
+        mail($email, $subject, $message, $headers);
+    }
+
+    public static function validateToken($token) {
+        $db = Database::getConnection();
+        $stmt = $db->prepare("SELECT * FROM tokens_recuperacio WHERE token = ?");
+        $stmt->execute([$token]);
+        $tokenData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($tokenData) {
+            // Comprova si el token ha expirat
+            if (strtotime($tokenData['expiration_date']) > time()) {
+                return $tokenData['user_id'];
+            } else {
+                // Elimina el token caducat
+                $stmt = $db->prepare("DELETE FROM tokens_recuperacio WHERE token = ?");
+                $stmt->execute([$token]);
+            }
+        }
+        return false;
+    }
+
+    public static function resetPassword($user_id, $new_password) {
+        $hash = password_hash($new_password, PASSWORD_BCRYPT);
+        $db = Database::getConnection();
+        $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+        $stmt->execute([$hash, $user_id]);
+
+        // Elimina tots els tokens associats a l'usuari
+        $stmt = $db->prepare("DELETE FROM tokens_recuperacio WHERE user_id = ?");
+        $stmt->execute([$user_id]);
+    }
+
 ?>
