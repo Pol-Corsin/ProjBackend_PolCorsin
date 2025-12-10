@@ -1,5 +1,4 @@
 CREATE DATABASE IF NOT EXISTS pt04_pol_corsinv2;
-
 USE pt04_pol_corsinv2;
 
 CREATE TABLE
@@ -29,4 +28,4 @@ CREATE TABLE
         `token` VARCHAR(255) NOT NULL UNIQUE,
         `expiration_date` TIMESTAMP NOT NULL,
         FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-    )
+    );
