@@ -6,7 +6,7 @@ class Article
     public static function getAll()
     {
         $db = DB::connect();
-        $stmt = $db->query("SELECT * FROM articles ORDER BY creation_date DESC");
+        $stmt = $db->query("SELECT a.*, u.username AS author FROM articles a LEFT JOIN users u ON a.user_id = u.id ORDER BY a.creation_date DESC");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -30,7 +30,8 @@ class Article
         $sortBy = in_array($sortBy, $allowedSortBy) ? $sortBy : 'creation_date';
         $sortOrder = in_array(strtoupper($sortOrder), $allowedSortOrder) ? strtoupper($sortOrder) : 'DESC';
         
-        $stmt = $db->prepare("SELECT * FROM articles ORDER BY $sortBy $sortOrder LIMIT ? OFFSET ?");
+        // Seleccionem també el nom d'usuari de l'autor
+        $stmt = $db->prepare("SELECT a.*, u.username AS author FROM articles a LEFT JOIN users u ON a.user_id = u.id ORDER BY a.$sortBy $sortOrder LIMIT ? OFFSET ?");
         $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
         $stmt->bindValue(2, (int)$offset, PDO::PARAM_INT);
         $stmt->execute();
@@ -40,7 +41,7 @@ class Article
     public static function findByUser($user_id)
     {
         $db = DB::connect();
-        $stmt = $db->prepare("SELECT * FROM articles WHERE user_id = ? ORDER BY creation_date DESC");
+        $stmt = $db->prepare("SELECT a.*, u.username AS author FROM articles a LEFT JOIN users u ON a.user_id = u.id WHERE a.user_id = ? ORDER BY a.creation_date DESC");
         $stmt->execute([$user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -66,7 +67,7 @@ class Article
         $sortBy = in_array($sortBy, $allowedSortBy) ? $sortBy : 'creation_date';
         $sortOrder = in_array(strtoupper($sortOrder), $allowedSortOrder) ? strtoupper($sortOrder) : 'DESC';
         
-        $stmt = $db->prepare("SELECT * FROM articles WHERE user_id = ? ORDER BY $sortBy $sortOrder LIMIT ? OFFSET ?");
+        $stmt = $db->prepare("SELECT a.*, u.username AS author FROM articles a LEFT JOIN users u ON a.user_id = u.id WHERE a.user_id = ? ORDER BY a.$sortBy $sortOrder LIMIT ? OFFSET ?");
         $stmt->bindValue(1, $user_id, PDO::PARAM_INT);
         $stmt->bindValue(2, (int)$limit, PDO::PARAM_INT);
         $stmt->bindValue(3, (int)$offset, PDO::PARAM_INT);
@@ -77,7 +78,7 @@ class Article
     public static function findById($id)
     {
         $db = DB::connect();
-        $stmt = $db->prepare("SELECT * FROM articles WHERE id = ?");
+        $stmt = $db->prepare("SELECT a.*, u.username AS author FROM articles a LEFT JOIN users u ON a.user_id = u.id WHERE a.id = ?");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -113,7 +114,7 @@ class Article
     public static function searchByTitle($q, $limit = 10)
     {
         $db = DB::connect();
-        $sql = "SELECT id, title, SUBSTR(content,1,200) as snippet, creation_date FROM articles WHERE title LIKE ? ORDER BY creation_date DESC LIMIT ?";
+        $sql = "SELECT a.id, a.title, SUBSTR(a.content,1,200) as snippet, a.creation_date, u.username AS author FROM articles a LEFT JOIN users u ON a.user_id = u.id WHERE a.title LIKE ? ORDER BY a.creation_date DESC LIMIT ?";
         $stmt = $db->prepare($sql);
         $like = '%' . $q . '%';
         $stmt->bindValue(1, $like, PDO::PARAM_STR);

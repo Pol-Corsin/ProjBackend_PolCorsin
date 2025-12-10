@@ -11,7 +11,7 @@
     <?php if (isset($article) && $article): ?>
         <article class="tarja-article">
             <h2><?= htmlspecialchars($article['title']) ?></h2>
-            <p><em>Creació: <?= htmlspecialchars($article['creation_date']) ?></em></p>
+            <p><em>Creació: <?= htmlspecialchars($article['creation_date']) ?> · Per: <?= htmlspecialchars($article['author'] ?? 'Anònim') ?></em></p>
             <div><?= nl2br(htmlspecialchars($article['content'])) ?></div>
         </article>
     <?php else: ?>

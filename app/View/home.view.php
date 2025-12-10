@@ -37,6 +37,7 @@
             <?php foreach ($articles as $article): ?>
                 <article class="tarja-article" data-title="<?= htmlspecialchars($article['title']) ?>">
                     <h3><?= htmlspecialchars($article['title']); ?></h3>
+                    <p class="article-meta"><small>Per: <?= htmlspecialchars($article['author'] ?? 'Anònim') ?> · <?= htmlspecialchars($article['creation_date']) ?></small></p>
                     <p><?= nl2br(htmlspecialchars($article['content'])); ?></p>
                     <?php
                     if (
