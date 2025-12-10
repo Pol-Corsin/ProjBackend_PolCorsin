@@ -86,13 +86,29 @@ if (isset($_GET['action'])) {
             $errors = $result['errors'];
         }
     }
+    if ($gAction === 'delete_user' && isset($_GET['id'])) {
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php');
+            exit;
+        }
+        $user_id = intval($_GET['id']);
+        $result = UserController::deleteUser($user_id, $_SESSION['user_id'], $_SESSION['role'] ?? null);
+        if ($result['success']) {
+            header('Location: index.php?view=user_management');
+            exit;
+        } else {
+            $errors = $result['errors'];
+            $view = 'user_management';
+        }
+    }
 }
 
 // Paginació 
-$perPageOptions = [1,2,4,6];
-$perPage = isset($_GET['perPage']) ? max(1,intval($_GET['perPage'])) : 4; // default 4
-if (!in_array($perPage, $perPageOptions)) $perPage = 4;
-$page = isset($_GET['page']) ? max(1,intval($_GET['page'])) : 1;
+$perPageOptions = [1, 2, 4, 6];
+$perPage = isset($_GET['perPage']) ? max(1, intval($_GET['perPage'])) : 4; // default 4
+if (!in_array($perPage, $perPageOptions))
+    $perPage = 4;
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($page - 1) * $perPage;
 
 // Paràmetres d'ordenació
@@ -135,6 +151,11 @@ switch ($view) {
         break;
     case 'user_management':
         // mostra nomes en cas de tenir el rol d'administrador
+        if (($_SESSION['role'] ?? null) !== 'admin') {
+            header('Location: index.php');
+            exit;
+        }
+        $users = UserController::getAllUsers();
         include __DIR__ . '/../app/View/user_management.view.php';
         break;
     case 'recover';

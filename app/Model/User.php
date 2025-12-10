@@ -41,4 +41,26 @@ class User
         $stmt->execute([$newusername, $username]);
         return true;
     }
+
+    public static function getAll()
+    {
+        $db = DB::connect();
+        $stmt = $db->query("SELECT id, username, email, role FROM users ORDER BY username ASC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function findById($id)
+    {
+        $db = DB::connect();
+        $stmt = $db->prepare("SELECT * FROM users WHERE id=?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function delete($id)
+    {
+        $db = DB::connect();
+        $stmt = $db->prepare("DELETE FROM users WHERE id=?");
+        return $stmt->execute([$id]);
+    }
 }
