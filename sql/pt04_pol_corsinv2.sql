@@ -20,4 +20,13 @@ CREATE TABLE
         `user_id` INT NULL,
         `creation_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+    );
+
+CREATE TABLE 
+    `tokens_recuperacio` (
+        `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        `user_id` INT NOT NULL,
+        `token` VARCHAR(255) NOT NULL UNIQUE,
+        `expiration_date` TIMESTAMP NOT NULL,
+        FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
     )
