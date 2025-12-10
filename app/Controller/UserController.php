@@ -88,7 +88,7 @@ class UserController
             setcookie(session_name(), '', time() - 3600, '/');
         }
     }
-}
+
 
     public static function generateTokenRecuperacio($user_id) {
         $token = bin2hex(random_bytes(16)); // Genera un token aleatori
@@ -141,5 +141,5 @@ class UserController
         $stmt = $db->prepare("DELETE FROM tokens_recuperacio WHERE user_id = ?");
         $stmt->execute([$user_id]);
     }
-
+}
 ?>
