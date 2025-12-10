@@ -27,15 +27,15 @@
         </section>
 
         <!-- Search bar with accessible label -->
-        <section class="searchbar" style="margin-bottom: 10px">
+        <section class="searchbar" style="margin-bottom: 10px; position:relative;">
             <label for="iSearch"></label>
-            <input type="text" id="iSearch" placeholder="Escriu aquí per cercar..."> <!-- Barra de cerca -->
+            <input type="text" id="iSearch" name="q" placeholder="Escriu aquí per cercar..." autocomplete="off"> <!-- Barra de cerca -->
         </section>
 
         <!-- Articles section -->
         <section class="articles-list">
             <?php foreach ($articles as $article): ?>
-                <article class="tarja-article">
+                <article class="tarja-article" data-title="<?= htmlspecialchars($article['title']) ?>">
                     <h3><?= htmlspecialchars($article['title']); ?></h3>
                     <p><?= nl2br(htmlspecialchars($article['content'])); ?></p>
                     <?php
@@ -52,7 +52,7 @@
                         </div>
                     <?php endif; ?>
                 </article>
-                <hr>
+                
             <?php endforeach; ?>
         </section>
     </main>
@@ -112,6 +112,7 @@
                     <input type="hidden" name="page" value="1">
                     <input type="hidden" name="sortBy" value="<?= $sortBy ?>">
                     <input type="hidden" name="sortOrder" value="<?= $sortOrder ?>">
+                    <input type="hidden" name="q" value="<?= htmlspecialchars($search ?? '') ?>">
                 </form>
             </div>
 
@@ -145,6 +146,7 @@
             </div>
         </nav>
     </section> <!-- End Pagination -->
+    <script src="js/search.js"></script>
 </body>
 
 </html>

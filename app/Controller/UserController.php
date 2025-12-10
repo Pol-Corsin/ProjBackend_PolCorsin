@@ -90,6 +90,9 @@ class UserController
     }
 
 
+
+
+    // ! TOKEN I EMAIL PER RECUPERACIÓ DE CONTRASENYA !
     public static function generateTokenRecuperacio($user_id) {
         $token = bin2hex(random_bytes(16)); // Genera un token aleatori
         $expiration_date = date('Y-m-d H:i:s', strtotime('+1 hour')); // Expira en 1 hora

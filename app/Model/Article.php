@@ -103,4 +103,22 @@ class Article
         $stmt = $db->prepare("DELETE FROM articles WHERE id=?");
         return $stmt->execute([$id]);
     }
+
+    /**
+     * Search articles by title (server-side)
+     * @param string $q
+     * @param int $limit
+     * @return array
+     */
+    public static function searchByTitle($q, $limit = 10)
+    {
+        $db = DB::connect();
+        $sql = "SELECT id, title, SUBSTR(content,1,200) as snippet, creation_date FROM articles WHERE title LIKE ? ORDER BY creation_date DESC LIMIT ?";
+        $stmt = $db->prepare($sql);
+        $like = '%' . $q . '%';
+        $stmt->bindValue(1, $like, PDO::PARAM_STR);
+        $stmt->bindValue(2, (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

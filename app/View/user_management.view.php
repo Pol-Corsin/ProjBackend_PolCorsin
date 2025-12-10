@@ -28,6 +28,10 @@
         <?php endif; ?>
 
         <section class="users-list">
+            <div class="user-search" style="margin-bottom:12px;">
+                <label for="iUserSearch"></label>
+                <input type="text" id="iUserSearch" name="user_q" placeholder="Cerca per nom o email..." autocomplete="off">
+            </div>
             <?php if (empty($users)): ?>
                 <p>No hi ha usuaris registrats.</p>
             <?php else: ?>
@@ -43,7 +47,7 @@
                     </thead>
                     <tbody>
                         <?php foreach ($users as $user): ?>
-                            <tr>
+                            <tr data-username="<?= htmlspecialchars($user['username']) ?>" data-email="<?= htmlspecialchars($user['email']) ?>">
                                 <td><?= htmlspecialchars($user['id']); ?></td>
                                 <td><?= htmlspecialchars($user['username']); ?></td>
                                 <td><?= htmlspecialchars($user['email']); ?></td>
@@ -65,7 +69,7 @@
             <?php endif; ?>
         </section>
     </main>
-
+    <script src="js/search.js"></script>
 </body>
 
 </html>

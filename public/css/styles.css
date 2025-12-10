@@ -47,6 +47,8 @@ body {
 
 .topnav a {
     color: white;
+    text-decoration: none;
+    margin-left: 12px;
     margin-right: 12px;
     background: rgba(0, 0, 0, 0.12);
     padding: 6px 8px;
@@ -195,6 +197,20 @@ h1 {
     font-weight: 700;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.564);
 }
+
+/* Search suggestions styling */
+.search-suggestions { padding: 0 4px; }
+.search-suggestions .search-suggestion-item:hover { background: rgba(0,0,0,0.04); }
+
+/* Search input basic styling */
+.searchbar input[type="text"], .user-search input[type="text"] {
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.12);
+    width: 60%;
+    box-sizing: border-box;
+}
+.searchbar label, .user-search label { margin-right:8px; font-weight:500; }
 
 
 

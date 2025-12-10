@@ -158,6 +158,13 @@ switch ($view) {
         $users = UserController::getAllUsers();
         include __DIR__ . '/../app/View/user_management.view.php';
         break;
+    case 'article':
+        $article = null;
+        if (isset($_GET['id'])) {
+            $article = ArticleController::findById(intval($_GET['id']));
+        }
+        include __DIR__ . '/../app/View/article.view.php';
+        break;
     case 'recover';
         include __DIR__ . '/../app/View/recover.view.php';
         break;
