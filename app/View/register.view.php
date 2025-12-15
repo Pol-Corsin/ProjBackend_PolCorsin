@@ -44,7 +44,6 @@
                     <label for="register_password2">Repetir contrasenya:</label>
                     <input type="password" id="register_password2" name="password2" required>
                 </div>
-                <p id="password_requirements" style="font-size: 0.9em; color: #666;">La contrasenya ha de tenir almenys 8 caràcters, inclosa una lletra majúscula, una minúscula i un dígit.</p>
             </fieldset>
             <button type="submit" aria-label="Registrar-se a la plataforma">Registrar</button>
         </form>
