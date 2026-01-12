@@ -151,16 +151,16 @@ switch ($view) {
         break;
     case 'user_management':
         // mostra nomes en cas de tenir el rol d'administrador
-        if (($_SESSION['role'] ?? null) !== 'admin') {
+        if (($_SESSION['role'] ?? null) !== 'admin') { // si no te rol administrador redirigeix a home
             header('Location: index.php');
             exit;
         }
-        $users = UserController::getAllUsers();
+        $users = UserController::getAllUsers(); // crida al controlador per obtenir tots els usuaris
         include __DIR__ . '/../app/View/user_management.view.php';
         break;
     case 'article':
         $article = null;
-        if (isset($_GET['id'])) {
+        if (isset($_GET['id'])) { // GET
             $article = ArticleController::findById(intval($_GET['id']));
         }
         include __DIR__ . '/../app/View/article.view.php';
