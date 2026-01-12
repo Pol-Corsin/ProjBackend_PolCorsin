@@ -6,12 +6,13 @@ ini_set('session.gc_maxlifetime', 2400); // durada del servidor per a dades de s
 session_set_cookie_params(2400); // cookie del navegador dura 40min
 session_start();
 
-// Autoload controllers (they will require models internals)
+// Autoload controllers and router
 require_once __DIR__ . '/../app/Controller/UserController.php';
 require_once __DIR__ . '/../app/Controller/ArticleController.php';
+require_once __DIR__ . '/../app/Router.php';
 
-$error = null;
-$errors = [];
+// Validar token de Remember Me al inicio
+UserController::validateRememberMeTokenOnStartup();
 
 // Gestionar accions POST (login / register / article update/create)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
@@ -24,10 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             exit;
         } else {
             $errors = $result['errors'];
-            $error = $errors[0] ?? 'Usuari o contrasenya incorrectes';
-            $username = $_POST['username'] ?? '';
-            // Permetem romandre a la vista de login conservant dades
-            $view = 'login';
+            $_GET['view'] = 'login';
         }
     }
     if ($action === 'register') {
@@ -37,10 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             exit;
         } else {
             $errors = $result['errors'];
-            $username = $_POST['username'] ?? '';
-            $email = $_POST['email'] ?? '';
-            // Permetem romandre a la vista de registre conservant dades
-            $view = 'register';
+            $_GET['view'] = 'register';
         }
     }
 
@@ -98,81 +93,11 @@ if (isset($_GET['action'])) {
             exit;
         } else {
             $errors = $result['errors'];
-            $view = 'user_management';
         }
     }
 }
 
-// Paginació 
-$perPageOptions = [1, 2, 4, 6];
-$perPage = isset($_GET['perPage']) ? max(1, intval($_GET['perPage'])) : 4; // default 4
-if (!in_array($perPage, $perPageOptions))
-    $perPage = 4;
-$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-$offset = ($page - 1) * $perPage;
-
-// Paràmetres d'ordenació
-$allowedSortBy = ['creation_date', 'title'];
-$allowedSortOrder = ['ASC', 'DESC'];
-$sortBy = isset($_GET['sortBy']) && in_array($_GET['sortBy'], $allowedSortBy) ? $_GET['sortBy'] : 'creation_date';
-$sortOrder = isset($_GET['sortOrder']) && in_array($_GET['sortOrder'], $allowedSortOrder) ? $_GET['sortOrder'] : 'DESC';
-
-// Articles paginats 
-$totalArticles = ArticleController::countAll();
-$articles = ArticleController::getPaginated($perPage, $offset, $sortBy, $sortOrder);
-
-// ROUTER
-if (!isset($view)) {
-    $view = $_GET['view'] ?? 'home';
-}
-switch ($view) {
-    case 'login':
-        include __DIR__ . '/../app/View/login.view.php';
-        break;
-    case 'register':
-        include __DIR__ . '/../app/View/register.view.php';
-        break;
-    case 'article_edit':
-        // Donar $article a la view si id està definit
-        $article = null;
-        if (isset($_GET['id'])) {
-            $article = ArticleController::findById(intval($_GET['id']));
-        }
-        include __DIR__ . '/../app/View/article_edit.view.php';
-        break;
-    case 'my_articles':
-        // Nomes els articles de l'usuari actual
-        if (isset($_SESSION['user_id'])) {
-            // Paginar per usuari actual
-            $totalArticles = ArticleController::countByUser($_SESSION['user_id']);
-            $articles = ArticleController::getPaginatedByUser($perPage, $offset, $_SESSION['user_id'], $sortBy, $sortOrder);
-        }
-        include __DIR__ . '/../app/View/home.view.php';
-        break;
-    case 'user_management':
-        // mostra nomes en cas de tenir el rol d'administrador
-        if (($_SESSION['role'] ?? null) !== 'admin') { // si no te rol administrador redirigeix a home
-            header('Location: index.php');
-            exit;
-        }
-        $users = UserController::getAllUsers(); // crida al controlador per obtenir tots els usuaris
-        include __DIR__ . '/../app/View/user_management.view.php';
-        break;
-    case 'article':
-        $article = null;
-        if (isset($_GET['id'])) { // GET
-            $article = ArticleController::findById(intval($_GET['id']));
-        }
-        include __DIR__ . '/../app/View/article.view.php';
-        break;
-    case 'recover';
-        include __DIR__ . '/../app/View/recover.view.php';
-        break;
-
-
-    default:
-        include __DIR__ . '/../app/View/home.view.php';
-        break;
-}
-
-?>
+// Initialize router and dispatch
+$errors = [];
+$router = new Router();
+$router->dispatch();
