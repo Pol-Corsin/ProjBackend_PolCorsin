@@ -19,6 +19,7 @@ class UserController
     {
         $username = trim($post['username'] ?? '');
         $password = $post['password'] ?? '';
+        $rememberMe = isset($post['remember_me']) && $post['remember_me'] === 'on';
         $errors = [];
         if ($username === '' || $password === '') {
             $errors[] = 'Cal introduir usuari i contrasenya';
@@ -29,6 +30,13 @@ class UserController
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'] ?? null;
+            
+            // Si el usuario marcó "Recuerda este dispositivo", generar token y guardar en cookie
+            if ($rememberMe) {
+                $token = User::generateRememberMeToken($user['id'], 30);
+                setcookie('remember_me_token', $token, time() + (30 * 24 * 60 * 60), '/', '', false, true);
+            }
+            
             return ['success' => true, 'errors' => []];
         }
         $errors[] = 'Usuari o contrasenya incorrecta';
@@ -80,12 +88,46 @@ class UserController
 
     public static function logout()
     {
+        // Eliminar token de Remember Me si existe
+        if (isset($_COOKIE['remember_me_token'])) {
+            User::deleteRememberMeToken($_COOKIE['remember_me_token']);
+            setcookie('remember_me_token', '', time() - 3600, '/', '', false, true);
+        }
+
         // Tancar la sessió i eliminar la cookie de sessió (si n'hi ha)
         session_unset();
         session_destroy();
         // Eliminar cookie de sessió del navegador per a neteja completa
         if (isset($_COOKIE[session_name()])) {
             setcookie(session_name(), '', time() - 3600, '/');
+        }
+    }
+
+    /**
+     * Validar token de Remember Me al inicio
+     * Si válido, restaurar la sesión del usuario
+     */
+    public static function validateRememberMeTokenOnStartup()
+    {
+        // Si ya hay sesión activa, no hacer nada
+        if (isset($_SESSION['user_id'])) {
+            return;
+        }
+
+        // Verificar si existe cookie de remember me
+        if (!isset($_COOKIE['remember_me_token'])) {
+            return;
+        }
+
+        // Validar el token
+        $user_id = User::validateRememberMeToken($_COOKIE['remember_me_token']);
+        if ($user_id) {
+            $user = User::findById($user_id);
+            if ($user) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['role'] = $user['role'] ?? null;
+            }
         }
     }
 
