@@ -34,6 +34,12 @@
                 <label for="login_password">Contrasenya:</label>
                 <input type="password" id="login_password" name="password" required>
             </div>
+            <div class="form-group checkbox-group">
+                <label for="login_remember_me">
+                    <input type="checkbox" id="login_remember_me" name="remember_me">
+                    Recorda aquest dispositiu durant 30 dies
+                </label>
+            </div>
             <button type="submit" aria-label="Entrar a la plataforma">Entrar</button>
         </form>
         <p style="color: #a324ae"><a href="index.php?view=register">Registrar-se</a> | <a href="index.php?view=recover">Has oblidat la contrasenya?</a></p> <!-- Falta implementar recover view -->
