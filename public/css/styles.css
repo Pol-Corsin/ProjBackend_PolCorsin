@@ -18,7 +18,7 @@ body {
 
 
 body {
-    background: linear-gradient(137deg, rgba(234, 167, 235, 1) 0%, rgba(230, 208, 172, 1) 100%);
+    background: linear-gradient(137deg, rgb(118, 173, 215) 0%, rgb(167, 154, 222) 100%);
     background-repeat: no-repeat;
     background-attachment: fixed;
     /* opcional, para que no se mueva al hacer scroll */
